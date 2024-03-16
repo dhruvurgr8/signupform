@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Signup.css";
+
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -8,21 +9,25 @@ function SignUp() {
   const [passwordValidated, setPasswordValidated] = useState(false);
   const [confirmPasswordValidated, setConfirmPasswordValidated] =
     useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
+  const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
 
   const validateEmail = (input) => {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setEmailValidated(pattern.test(input));
+    setEmailValidated(input === "" || pattern.test(input));
   };
 
   const validatePassword = (input) => {
-    setPasswordValidated(input.length >= 8);
+    setPasswordValidated(input === "" || input.length >= 8);
   };
 
   const validateConfirmPassword = (input) => {
-    setConfirmPasswordValidated(input === password);
+    setConfirmPasswordValidated(input === "" || input === password);
   };
 
   const handleSubmit = (e) => {
+    console.log(email, password, confirmPassword);
     e.preventDefault();
     if (emailValidated && passwordValidated && confirmPasswordValidated) {
       alert("Form submitted successfully");
@@ -46,13 +51,19 @@ function SignUp() {
               setEmail(e.target.value);
               validateEmail(e.target.value);
             }}
+            onBlur={() => setEmailTouched(true)}
             style={{
-              border: emailValidated ? "2px solid green" : "2px solid red",
+              border:
+                emailTouched && !emailValidated
+                  ? "2px solid red"
+                  : emailValidated
+                  ? "2px solid green"
+                  : "",
             }}
             required
           />
           <br />
-          {!emailValidated && (
+          {emailTouched && !emailValidated && (
             <span style={{ color: "red" }}>Invalid email format</span>
           )}
         </div>
@@ -68,13 +79,19 @@ function SignUp() {
               setPassword(e.target.value);
               validatePassword(e.target.value);
             }}
+            onBlur={() => setPasswordTouched(true)}
             style={{
-              border: passwordValidated ? "2px solid green" : "2px solid red",
+              border:
+                passwordTouched && !passwordValidated
+                  ? "2px solid red"
+                  : passwordValidated
+                  ? "2px solid green"
+                  : "",
             }}
             required
           />
           <br />
-          {!passwordValidated && (
+          {passwordTouched && !passwordValidated && (
             <span style={{ color: "red" }}>
               Password must be at least 8 characters long
             </span>
@@ -92,15 +109,19 @@ function SignUp() {
               setConfirmPassword(e.target.value);
               validateConfirmPassword(e.target.value);
             }}
+            onBlur={() => setConfirmPasswordTouched(true)}
             style={{
-              border: confirmPasswordValidated
-                ? "2px solid green"
-                : "2px solid red",
+              border:
+                confirmPasswordTouched && !confirmPasswordValidated
+                  ? "2px solid red"
+                  : confirmPasswordValidated
+                  ? "2px solid green"
+                  : "",
             }}
             required
           />
           <br />
-          {!confirmPasswordValidated && (
+          {confirmPasswordTouched && !confirmPasswordValidated && (
             <span style={{ color: "red" }}>Passwords do not match</span>
           )}
         </div>
